@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { LogIn, Plus, Pencil, Trash2, Video, LogOut, X, Save, Calendar, Heart } from "lucide-react";
+import { LogIn, Plus, Pencil, Trash2, Video, LogOut, X, Save, Calendar, Heart, Loader2 } from "lucide-react";
 import { useVideos, Video as VideoType } from "@/contexts/VideoContext";
 import { useSchedule, ScheduleEvent } from "@/contexts/ScheduleContext";
 import { useProjects, Project } from "@/contexts/ProjectContext";
+import { supabase } from "@/lib/supabase";
 
 type Tab = "videos" | "cultos" | "projetos";
 
@@ -17,9 +18,10 @@ const dayOptions = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta",
 
 const Admin = () => {
   const [authenticated, setAuthenticated] = useState(false);
-  const [user, setUser] = useState("");
+  const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
   const [error, setError] = useState("");
+  const [loginLoading, setLoginLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<Tab>("videos");
 
   const { videos, addVideo, updateVideo, removeVideo } = useVideos();
@@ -30,50 +32,72 @@ const Admin = () => {
   const [showVideoForm, setShowVideoForm] = useState(false);
   const [editingVideo, setEditingVideo] = useState<VideoType | null>(null);
   const [videoForm, setVideoForm] = useState({ title: "", description: "", url: "" });
+  const [videoSaving, setVideoSaving] = useState(false);
 
   // Schedule form
   const [showScheduleForm, setShowScheduleForm] = useState(false);
   const [scheduleForm, setScheduleForm] = useState({ day: "Domingo", time: "", title: "", location: "Sede Mundial" });
+  const [scheduleSaving, setScheduleSaving] = useState(false);
 
   // Project form
   const [showProjectForm, setShowProjectForm] = useState(false);
   const [projectForm, setProjectForm] = useState({ title: "", description: "", impact: "" });
+  const [projectSaving, setProjectSaving] = useState(false);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (user === "teste" && pass === "teste") {
-      setAuthenticated(true);
-      setError("");
+    setLoginLoading(true);
+    setError("");
+    const { error: authError } = await supabase.auth.signInWithPassword({
+      email,
+      password: pass,
+    });
+    setLoginLoading(false);
+    if (authError) {
+      setError("Credenciais inválidas. Verifique seu e-mail e senha.");
     } else {
-      setError("Credenciais inválidas");
+      setAuthenticated(true);
     }
   };
 
-  const handleSaveVideo = (e: React.FormEvent) => {
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    setAuthenticated(false);
+    setEmail("");
+    setPass("");
+  };
+
+  const handleSaveVideo = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!videoForm.title || !videoForm.url) return;
+    setVideoSaving(true);
     if (editingVideo) {
-      updateVideo(editingVideo.id, videoForm);
+      await updateVideo(editingVideo.id, videoForm);
     } else {
-      addVideo(videoForm);
+      await addVideo(videoForm);
     }
+    setVideoSaving(false);
     setVideoForm({ title: "", description: "", url: "" });
     setShowVideoForm(false);
     setEditingVideo(null);
   };
 
-  const handleSaveSchedule = (e: React.FormEvent) => {
+  const handleSaveSchedule = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!scheduleForm.title || !scheduleForm.time) return;
-    addEvent(scheduleForm);
+    setScheduleSaving(true);
+    await addEvent(scheduleForm);
+    setScheduleSaving(false);
     setScheduleForm({ day: "Domingo", time: "", title: "", location: "Sede Mundial" });
     setShowScheduleForm(false);
   };
 
-  const handleSaveProject = (e: React.FormEvent) => {
+  const handleSaveProject = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!projectForm.title || !projectForm.description) return;
-    addProject(projectForm);
+    setProjectSaving(true);
+    await addProject(projectForm);
+    setProjectSaving(false);
     setProjectForm({ title: "", description: "", impact: "" });
     setShowProjectForm(false);
   };
@@ -90,10 +114,31 @@ const Admin = () => {
             <p className="text-sm text-muted-foreground mt-1">Acesso restrito</p>
           </div>
           <form onSubmit={handleLogin} className="flex flex-col gap-4">
-            <input type="text" value={user} onChange={(e) => setUser(e.target.value)} placeholder="Usuário" className="px-4 py-3 rounded-xl bg-muted border border-border focus:border-primary outline-none text-foreground" />
-            <input type="password" value={pass} onChange={(e) => setPass(e.target.value)} placeholder="Senha" className="px-4 py-3 rounded-xl bg-muted border border-border focus:border-primary outline-none text-foreground" />
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="E-mail"
+              required
+              className="px-4 py-3 rounded-xl bg-muted border border-border focus:border-primary outline-none text-foreground"
+            />
+            <input
+              type="password"
+              value={pass}
+              onChange={(e) => setPass(e.target.value)}
+              placeholder="Senha"
+              required
+              className="px-4 py-3 rounded-xl bg-muted border border-border focus:border-primary outline-none text-foreground"
+            />
             {error && <p className="text-destructive text-sm text-center">{error}</p>}
-            <button type="submit" className="bg-gradient-purple text-primary-foreground py-3 rounded-xl font-semibold hover:opacity-90 transition-opacity">Entrar</button>
+            <button
+              type="submit"
+              disabled={loginLoading}
+              className="bg-gradient-purple text-primary-foreground py-3 rounded-xl font-semibold hover:opacity-90 transition-opacity flex items-center justify-center gap-2 disabled:opacity-60"
+            >
+              {loginLoading ? <Loader2 size={18} className="animate-spin" /> : <LogIn size={18} />}
+              {loginLoading ? "Entrando..." : "Entrar"}
+            </button>
           </form>
         </motion.div>
       </div>
@@ -105,7 +150,7 @@ const Admin = () => {
       <div className="container max-w-4xl">
         <div className="flex items-center justify-between mb-6">
           <h1 className="font-heading text-2xl font-bold text-gradient-gold">Painel Admin</h1>
-          <button onClick={() => setAuthenticated(false)} className="flex items-center gap-2 text-muted-foreground hover:text-foreground text-sm">
+          <button onClick={handleLogout} className="flex items-center gap-2 text-muted-foreground hover:text-foreground text-sm">
             <LogOut size={18} /> Sair
           </button>
         </div>
@@ -145,8 +190,9 @@ const Admin = () => {
                   <input type="text" value={videoForm.title} onChange={(e) => setVideoForm({ ...videoForm, title: e.target.value })} placeholder="Título do vídeo" required className="px-4 py-3 rounded-xl bg-muted border border-border focus:border-primary outline-none text-foreground" />
                   <input type="url" value={videoForm.url} onChange={(e) => setVideoForm({ ...videoForm, url: e.target.value })} placeholder="Link do YouTube" required className="px-4 py-3 rounded-xl bg-muted border border-border focus:border-primary outline-none text-foreground" />
                   <textarea value={videoForm.description} onChange={(e) => setVideoForm({ ...videoForm, description: e.target.value })} placeholder="Descrição" rows={3} className="px-4 py-3 rounded-xl bg-muted border border-border focus:border-primary outline-none text-foreground resize-none" />
-                  <button type="submit" className="flex items-center justify-center gap-2 bg-gradient-gold text-foreground py-3 rounded-xl font-semibold hover:opacity-90">
-                    <Save size={18} /> {editingVideo ? "Salvar Alterações" : "Adicionar Vídeo"}
+                  <button type="submit" disabled={videoSaving} className="flex items-center justify-center gap-2 bg-gradient-gold text-foreground py-3 rounded-xl font-semibold hover:opacity-90 disabled:opacity-60">
+                    {videoSaving ? <Loader2 size={18} className="animate-spin" /> : <Save size={18} />}
+                    {editingVideo ? "Salvar Alterações" : "Adicionar Vídeo"}
                   </button>
                 </form>
               </motion.div>
@@ -193,8 +239,9 @@ const Admin = () => {
                   <input type="time" value={scheduleForm.time} onChange={(e) => setScheduleForm({ ...scheduleForm, time: e.target.value })} required className="px-4 py-3 rounded-xl bg-muted border border-border focus:border-primary outline-none text-foreground" />
                   <input type="text" value={scheduleForm.title} onChange={(e) => setScheduleForm({ ...scheduleForm, title: e.target.value })} placeholder="Nome do culto/evento" required className="px-4 py-3 rounded-xl bg-muted border border-border focus:border-primary outline-none text-foreground" />
                   <input type="text" value={scheduleForm.location} onChange={(e) => setScheduleForm({ ...scheduleForm, location: e.target.value })} placeholder="Local" className="px-4 py-3 rounded-xl bg-muted border border-border focus:border-primary outline-none text-foreground" />
-                  <button type="submit" className="flex items-center justify-center gap-2 bg-gradient-gold text-foreground py-3 rounded-xl font-semibold hover:opacity-90">
-                    <Save size={18} /> Adicionar Culto
+                  <button type="submit" disabled={scheduleSaving} className="flex items-center justify-center gap-2 bg-gradient-gold text-foreground py-3 rounded-xl font-semibold hover:opacity-90 disabled:opacity-60">
+                    {scheduleSaving ? <Loader2 size={18} className="animate-spin" /> : <Save size={18} />}
+                    Adicionar Culto
                   </button>
                 </form>
               </motion.div>
@@ -235,8 +282,9 @@ const Admin = () => {
                   <input type="text" value={projectForm.title} onChange={(e) => setProjectForm({ ...projectForm, title: e.target.value })} placeholder="Nome do projeto" required className="px-4 py-3 rounded-xl bg-muted border border-border focus:border-primary outline-none text-foreground" />
                   <textarea value={projectForm.description} onChange={(e) => setProjectForm({ ...projectForm, description: e.target.value })} placeholder="Descrição do projeto" rows={3} required className="px-4 py-3 rounded-xl bg-muted border border-border focus:border-primary outline-none text-foreground resize-none" />
                   <input type="text" value={projectForm.impact} onChange={(e) => setProjectForm({ ...projectForm, impact: e.target.value })} placeholder="Impacto (ex: +500 famílias atendidas)" className="px-4 py-3 rounded-xl bg-muted border border-border focus:border-primary outline-none text-foreground" />
-                  <button type="submit" className="flex items-center justify-center gap-2 bg-gradient-gold text-foreground py-3 rounded-xl font-semibold hover:opacity-90">
-                    <Save size={18} /> Adicionar Projeto
+                  <button type="submit" disabled={projectSaving} className="flex items-center justify-center gap-2 bg-gradient-gold text-foreground py-3 rounded-xl font-semibold hover:opacity-90 disabled:opacity-60">
+                    {projectSaving ? <Loader2 size={18} className="animate-spin" /> : <Save size={18} />}
+                    Adicionar Projeto
                   </button>
                 </form>
               </motion.div>

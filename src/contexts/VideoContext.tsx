@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { supabase } from "@/lib/supabase";
 
 export interface Video {
   id: string;
@@ -11,9 +12,10 @@ export interface Video {
 
 interface VideoContextType {
   videos: Video[];
-  addVideo: (video: Omit<Video, "id" | "createdAt">) => void;
-  updateVideo: (id: string, video: Partial<Video>) => void;
-  removeVideo: (id: string) => void;
+  loading: boolean;
+  addVideo: (video: Omit<Video, "id" | "createdAt">) => Promise<void>;
+  updateVideo: (id: string, video: Partial<Video>) => Promise<void>;
+  removeVideo: (id: string) => Promise<void>;
 }
 
 const VideoContext = createContext<VideoContextType | undefined>(undefined);
@@ -24,50 +26,66 @@ export const useVideos = () => {
   return ctx;
 };
 
-const STORAGE_KEY = "church_videos";
-
 export const VideoProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [videos, setVideos] = useState<Video[]>(() => {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    return stored ? JSON.parse(stored) : [
-      {
-        id: "1",
-        title: "Culto de Domingo - A Fé que Move Montanhas",
-        description: "Mensagem poderosa sobre fé e perseverança",
-        url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-        createdAt: new Date().toISOString(),
-      },
-      {
-        id: "2",
-        title: "Estudo Bíblico - O Poder da Oração",
-        description: "Aprenda sobre a importância da oração diária",
-        url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-        createdAt: new Date().toISOString(),
-      },
-    ];
-  });
+  const [videos, setVideos] = useState<Video[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchVideos = async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from("videos")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (!error && data) {
+      setVideos(
+        data.map((v) => ({
+          id: v.id,
+          title: v.title,
+          description: v.description ?? "",
+          url: v.url,
+          thumbnail: v.thumbnail ?? undefined,
+          createdAt: v.created_at,
+        }))
+      );
+    }
+    setLoading(false);
+  };
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(videos));
-  }, [videos]);
+    fetchVideos();
+  }, []);
 
-  const addVideo = (video: Omit<Video, "id" | "createdAt">) => {
-    setVideos((prev) => [
-      { ...video, id: crypto.randomUUID(), createdAt: new Date().toISOString() },
-      ...prev,
+  const addVideo = async (video: Omit<Video, "id" | "createdAt">) => {
+    const { error } = await supabase.from("videos").insert([
+      {
+        title: video.title,
+        description: video.description,
+        url: video.url,
+        thumbnail: video.thumbnail ?? null,
+      },
     ]);
+    if (!error) await fetchVideos();
   };
 
-  const updateVideo = (id: string, data: Partial<Video>) => {
-    setVideos((prev) => prev.map((v) => (v.id === id ? { ...v, ...data } : v)));
+  const updateVideo = async (id: string, data: Partial<Video>) => {
+    const payload: Record<string, unknown> = {};
+    if (data.title !== undefined) payload.title = data.title;
+    if (data.description !== undefined) payload.description = data.description;
+    if (data.url !== undefined) payload.url = data.url;
+    if (data.thumbnail !== undefined) payload.thumbnail = data.thumbnail;
+
+    const { error } = await supabase.from("videos").update(payload).eq("id", id);
+    if (!error) await fetchVideos();
   };
 
-  const removeVideo = (id: string) => {
-    setVideos((prev) => prev.filter((v) => v.id !== id));
+  const removeVideo = async (id: string) => {
+    const { error } = await supabase.from("videos").delete().eq("id", id);
+    if (!error) await fetchVideos();
   };
 
   return (
-    <VideoContext.Provider value={{ videos, addVideo, updateVideo, removeVideo }}>
+    <VideoContext.Provider value={{ videos, loading, addVideo, updateVideo, removeVideo }}>
       {children}
     </VideoContext.Provider>
   );

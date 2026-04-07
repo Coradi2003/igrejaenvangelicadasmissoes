@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { supabase } from "@/lib/supabase";
 
 export interface ScheduleEvent {
   id: string;
@@ -10,8 +11,9 @@ export interface ScheduleEvent {
 
 interface ScheduleContextType {
   events: ScheduleEvent[];
-  addEvent: (event: Omit<ScheduleEvent, "id">) => void;
-  removeEvent: (id: string) => void;
+  loading: boolean;
+  addEvent: (event: Omit<ScheduleEvent, "id">) => Promise<void>;
+  removeEvent: (id: string) => Promise<void>;
 }
 
 const ScheduleContext = createContext<ScheduleContextType | undefined>(undefined);
@@ -22,40 +24,60 @@ export const useSchedule = () => {
   return ctx;
 };
 
-const STORAGE_KEY = "church_schedule";
-
-const defaultEvents: ScheduleEvent[] = [
-  { id: "1", day: "Domingo", time: "09:00", title: "Escola Bíblica Dominical", location: "Sede Mundial" },
-  { id: "2", day: "Domingo", time: "18:00", title: "Culto de Celebração", location: "Sede Mundial" },
-  { id: "3", day: "Segunda", time: "19:30", title: "Oração dos Intercessores", location: "Sede Mundial" },
-  { id: "4", day: "Terça", time: "19:30", title: "Culto de Ensino", location: "Sede Mundial" },
-  { id: "5", day: "Quarta", time: "19:30", title: "Estudo Bíblico", location: "Sede Mundial" },
-  { id: "6", day: "Quinta", time: "19:30", title: "Culto da Família", location: "Sede Mundial" },
-  { id: "7", day: "Sexta", time: "20:00", title: "Culto de Libertação", location: "Sede Mundial" },
-  { id: "8", day: "Sábado", time: "16:00", title: "Encontro de Jovens", location: "Sede Mundial" },
-  { id: "9", day: "Sábado", time: "19:00", title: "Ensaio do Louvor", location: "Sede Mundial" },
-];
+const DAY_ORDER = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
 
 export const ScheduleProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [events, setEvents] = useState<ScheduleEvent[]>(() => {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    return stored ? JSON.parse(stored) : defaultEvents;
-  });
+  const [events, setEvents] = useState<ScheduleEvent[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(events));
-  }, [events]);
+  const fetchEvents = async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from("schedule_events")
+      .select("*");
 
-  const addEvent = (event: Omit<ScheduleEvent, "id">) => {
-    setEvents((prev) => [...prev, { ...event, id: crypto.randomUUID() }]);
+    if (!error && data) {
+      const sorted = [...data].sort((a, b) => {
+        const dayDiff = DAY_ORDER.indexOf(a.day) - DAY_ORDER.indexOf(b.day);
+        if (dayDiff !== 0) return dayDiff;
+        return a.time.localeCompare(b.time);
+      });
+      setEvents(
+        sorted.map((e) => ({
+          id: e.id,
+          day: e.day,
+          time: e.time,
+          title: e.title,
+          location: e.location,
+        }))
+      );
+    }
+    setLoading(false);
   };
 
-  const removeEvent = (id: string) => {
-    setEvents((prev) => prev.filter((e) => e.id !== id));
+  useEffect(() => {
+    fetchEvents();
+  }, []);
+
+  const addEvent = async (event: Omit<ScheduleEvent, "id">) => {
+    const { error } = await supabase.from("schedule_events").insert([
+      {
+        day: event.day,
+        time: event.time,
+        title: event.title,
+        location: event.location,
+      },
+    ]);
+    if (!error) await fetchEvents();
+  };
+
+  const removeEvent = async (id: string) => {
+    const { error } = await supabase.from("schedule_events").delete().eq("id", id);
+    if (!error) await fetchEvents();
   };
 
   return (
-    <ScheduleContext.Provider value={{ events, addEvent, removeEvent }}>
+    <ScheduleContext.Provider value={{ events, loading, addEvent, removeEvent }}>
       {children}
     </ScheduleContext.Provider>
   );
