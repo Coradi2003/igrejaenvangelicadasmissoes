@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Heart, Calendar, Play, HandHeart, Users, ArrowRight } from "lucide-react";
+import { useState } from "react";
 import SectionTitle from "@/components/SectionTitle";
 import { useVideos } from "@/contexts/VideoContext";
 import heroBg from "@/assets/hero-bg.jpg";
@@ -8,6 +9,74 @@ import heroBg from "@/assets/hero-bg.jpg";
 const getYouTubeId = (url: string) => {
   const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([^&?]+)/);
   return match ? match[1] : null;
+};
+
+// Componente separado para ter seu próprio estado de "playing"
+const VideoSection = ({ videos }: { videos: ReturnType<typeof useVideos>["videos"] }) => {
+  const [playing, setPlaying] = useState<string | null>(null);
+
+  return (
+    <section className="py-20">
+      <div className="container">
+        <SectionTitle title="Pregações e Mensagens" subtitle="Assista às últimas mensagens e fortaleça sua fé" gold />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {videos.slice(0, 3).map((video) => {
+            const ytId = getYouTubeId(video.url);
+            return (
+              <motion.div
+                key={video.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="glass rounded-xl overflow-hidden group hover:border-primary/50 transition-colors"
+              >
+                <div className="aspect-video bg-muted relative overflow-hidden">
+                  {playing === video.id && ytId ? (
+                    <iframe
+                      src={`https://www.youtube.com/embed/${ytId}?autoplay=1`}
+                      className="w-full h-full"
+                      allow="autoplay; encrypted-media"
+                      allowFullScreen
+                    />
+                  ) : (
+                    <button onClick={() => setPlaying(video.id)} className="w-full h-full relative">
+                      {ytId ? (
+                        <img
+                          src={`https://img.youtube.com/vi/${ytId}/hqdefault.jpg`}
+                          alt={video.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center bg-muted">
+                          <Play size={48} className="text-primary" />
+                        </div>
+                      )}
+                      <div className="absolute inset-0 bg-background/30 flex items-center justify-center">
+                        <div className="w-16 h-16 rounded-full bg-primary/80 flex items-center justify-center group-hover:scale-110 transition-transform">
+                          <Play size={28} className="text-primary-foreground ml-1" />
+                        </div>
+                      </div>
+                    </button>
+                  )}
+                </div>
+                <div className="p-5">
+                  <h3 className="font-heading font-semibold mb-2 line-clamp-2">{video.title}</h3>
+                  <p className="text-sm text-muted-foreground line-clamp-2">{video.description}</p>
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
+        {videos.length > 3 && (
+          <div className="text-center mt-8">
+            <Link to="/videos" className="inline-flex items-center gap-2 text-accent hover:underline font-semibold">
+              Ver todas as pregações <ArrowRight size={18} />
+            </Link>
+          </div>
+        )}
+      </div>
+    </section>
+  );
 };
 
 const Index = () => {
@@ -48,55 +117,7 @@ const Index = () => {
       </section>
 
       {/* Videos */}
-      {videos.length > 0 && (
-        <section className="py-20">
-          <div className="container">
-            <SectionTitle title="Pregações e Mensagens" subtitle="Assista às últimas mensagens e fortaleça sua fé" gold />
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {videos.slice(0, 3).map((video) => {
-                const ytId = getYouTubeId(video.url);
-                return (
-                  <motion.div
-                    key={video.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    className="glass rounded-xl overflow-hidden group hover:border-primary/50 transition-colors"
-                  >
-                    <div className="aspect-video bg-muted relative overflow-hidden">
-                      {ytId ? (
-                        <img
-                          src={`https://img.youtube.com/vi/${ytId}/hqdefault.jpg`}
-                          alt={video.title}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center">
-                          <Play size={48} className="text-primary" />
-                        </div>
-                      )}
-                      <div className="absolute inset-0 bg-background/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                        <Play size={48} className="text-accent" />
-                      </div>
-                    </div>
-                    <div className="p-5">
-                      <h3 className="font-heading font-semibold mb-2 line-clamp-2">{video.title}</h3>
-                      <p className="text-sm text-muted-foreground line-clamp-2">{video.description}</p>
-                    </div>
-                  </motion.div>
-                );
-              })}
-            </div>
-            {videos.length > 3 && (
-              <div className="text-center mt-8">
-                <Link to="/videos" className="inline-flex items-center gap-2 text-accent hover:underline font-semibold">
-                  Ver todas as pregações <ArrowRight size={18} />
-                </Link>
-              </div>
-            )}
-          </div>
-        </section>
-      )}
+      {videos.length > 0 && <VideoSection videos={videos} />}
 
       {/* Projects */}
       <section className="py-20 bg-muted/20">
