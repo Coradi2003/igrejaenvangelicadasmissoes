@@ -1,10 +1,11 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Heart, Calendar, Play, HandHeart, Users, ArrowRight } from "lucide-react";
+import { Heart, Calendar, Play, HandHeart, Users, ArrowRight, MapPin, ChevronDown } from "lucide-react";
 import { useState } from "react";
 import SectionTitle from "@/components/SectionTitle";
 import { useVideos } from "@/contexts/VideoContext";
-import heroBg from "@/assets/hero-bg.jpg";
+import heroBg from "@/assets/hero-bg-new.png";
+import logo from "@/assets/logo.jpeg";
 
 const getYouTubeId = (url: string) => {
   const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([^&?]+)/);
@@ -84,36 +85,137 @@ const Index = () => {
 
   return (
     <div className="min-h-screen">
-      {/* Hero */}
+      {/* ── HERO ── */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        <img src={heroBg} alt="" className="absolute inset-0 w-full h-full object-cover" width={1920} height={1080} />
-        <div className="absolute inset-0 bg-background/70" />
-        <div className="container relative z-10 text-center py-32">
-          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-            <p className="text-accent font-semibold tracking-widest uppercase text-sm mb-4">
-              Sede Mundial
-            </p>
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-heading font-bold leading-tight mb-6">
-              Igreja Evangélica de<br />
-              <span className="text-gradient-gold">Missões Unidas na Fé</span>
-            </h1>
-            <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10">
-              "Ide por todo o mundo, pregai o evangelho a toda criatura." — Marcos 16:15
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/oracao" className="bg-gradient-purple text-primary-foreground px-8 py-4 rounded-xl font-semibold text-lg hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
+
+        {/* Background image */}
+        <img
+          src={heroBg}
+          alt=""
+          className="absolute inset-0 w-full h-full object-cover object-center scale-105"
+          style={{ filter: "brightness(0.45) saturate(1.2)" }}
+        />
+
+        {/* Layered overlays for drama */}
+        <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-transparent to-background" />
+        <div className="absolute inset-0 bg-gradient-to-r from-background/50 via-transparent to-background/50" />
+        {/* Gold light burst from center */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_40%,_hsl(42_80%_55%/0.12),_transparent_70%)]" />
+
+        {/* Content */}
+        <div className="container relative z-10 text-center px-4 py-32">
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.9, ease: "easeOut" }}
+            className="flex flex-col items-center"
+          >
+            {/* Logo */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.7, delay: 0.1 }}
+              className="mb-6"
+            >
+              <img
+                src={logo}
+                alt="Logo Igreja Missões Unidas Na Fé"
+                className="w-28 h-28 md:w-36 md:h-36 rounded-full object-cover ring-4 ring-accent/60 shadow-[0_0_60px_hsl(42_80%_55%/0.4)]"
+              />
+            </motion.div>
+
+            {/* Badge */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.25 }}
+              className="inline-flex items-center gap-2 bg-accent/15 border border-accent/30 text-accent px-4 py-1.5 rounded-full text-xs font-semibold tracking-widest uppercase mb-6 backdrop-blur-sm"
+            >
+              <MapPin size={12} />
+              Sede Mundial · Maringá – PR
+            </motion.div>
+
+            {/* Main title */}
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.35, duration: 0.8 }}
+              className="font-heading font-bold leading-tight mb-6"
+              style={{ fontSize: "clamp(2.2rem, 6vw, 5rem)" }}
+            >
+              Igreja Missões{" "}
+              <span className="text-gradient-gold block sm:inline">Unidas Na Fé</span>
+              <span className="block text-2xl md:text-3xl font-semibold text-foreground/70 mt-2 tracking-widest uppercase" style={{ fontSize: "clamp(1rem, 2.5vw, 1.75rem)" }}>
+                Sede Mundial
+              </span>
+            </motion.h1>
+
+            {/* Divider line */}
+            <motion.div
+              initial={{ scaleX: 0 }}
+              animate={{ scaleX: 1 }}
+              transition={{ delay: 0.55, duration: 0.7 }}
+              className="w-24 h-px bg-gradient-to-r from-transparent via-accent to-transparent mb-6"
+            />
+
+            {/* Verse */}
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.65 }}
+              className="text-base md:text-lg text-muted-foreground max-w-xl mx-auto mb-10 italic"
+            >
+              "Ide por todo o mundo, pregai o evangelho a toda criatura."
+              <span className="block text-sm not-italic text-accent/80 mt-1 font-semibold">— Marcos 16:15</span>
+            </motion.p>
+
+            {/* CTA buttons */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.75 }}
+              className="flex flex-col sm:flex-row gap-4 justify-center"
+            >
+              <Link
+                to="/oracao"
+                className="group relative overflow-hidden bg-gradient-purple text-primary-foreground px-8 py-4 rounded-xl font-semibold text-base hover:opacity-95 transition-all hover:scale-105 hover:shadow-[0_0_30px_hsl(270_60%_50%/0.5)] flex items-center justify-center gap-2"
+              >
                 <Heart size={20} /> Pedir Oração
               </Link>
-              <Link to="/eventos" className="glass text-foreground px-8 py-4 rounded-xl font-semibold text-lg hover:bg-muted/80 transition-colors flex items-center justify-center gap-2">
+              <Link
+                to="/eventos"
+                className="glass text-foreground px-8 py-4 rounded-xl font-semibold text-base hover:bg-muted/80 hover:scale-105 transition-all flex items-center justify-center gap-2"
+              >
                 <Calendar size={20} /> Ver Eventos
               </Link>
-              <Link to="/doacoes" className="bg-gradient-gold text-gold-foreground px-8 py-4 rounded-xl font-semibold text-lg hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
+              <Link
+                to="/doacoes"
+                className="bg-gradient-gold text-gold-foreground px-8 py-4 rounded-xl font-semibold text-base hover:opacity-95 hover:scale-105 hover:shadow-[0_0_30px_hsl(42_80%_55%/0.5)] transition-all flex items-center justify-center gap-2"
+              >
                 <HandHeart size={20} /> Fazer Doação
               </Link>
-            </div>
+            </motion.div>
           </motion.div>
         </div>
-        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />
+
+        {/* Scroll indicator */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.2 }}
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-muted-foreground/60"
+        >
+          <span className="text-xs uppercase tracking-widest">Rolar</span>
+          <motion.div
+            animate={{ y: [0, 6, 0] }}
+            transition={{ repeat: Infinity, duration: 1.4, ease: "easeInOut" }}
+          >
+            <ChevronDown size={20} />
+          </motion.div>
+        </motion.div>
+
+        {/* Bottom fade */}
+        <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-background to-transparent" />
       </section>
 
       {/* Videos */}
