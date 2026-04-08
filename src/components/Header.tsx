@@ -17,6 +17,12 @@ const navItems = [
   { label: "Agenda", path: "/agenda" },
 ];
 
+const TikTokIcon = ({ size = 17 }: { size?: number }) => (
+  <svg viewBox="0 0 24 24" width={size} height={size} fill="currentColor" aria-hidden="true">
+    <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.75a8.18 8.18 0 0 0 4.78 1.52V6.82a4.85 4.85 0 0 1-1.01-.13z" />
+  </svg>
+);
+
 const Header = () => {
   const [open, setOpen] = useState(false);
   const location = useLocation();
@@ -47,7 +53,8 @@ const Header = () => {
           ))}
         </nav>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
+          {/* Instagram */}
           <a
             href="https://www.instagram.com/cesarpastorjunior"
             target="_blank"
@@ -58,6 +65,8 @@ const Header = () => {
           >
             <Instagram size={17} />
           </a>
+
+          {/* Facebook – Pastor César */}
           <a
             href="https://www.facebook.com/junior.cesar.432130"
             target="_blank"
@@ -68,6 +77,8 @@ const Header = () => {
           >
             <Facebook size={17} />
           </a>
+
+          {/* Facebook – Projeto África */}
           <a
             href="https://www.facebook.com/people/pastor-J%C3%BAnior-c%C3%A9sar-projeto-%C3%81frica/61587150028683/?rdid=uUuo4L8dW9qYoCzD&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F1EX51ctf6w%2F"
             target="_blank"
@@ -81,6 +92,8 @@ const Header = () => {
               🌍
             </span>
           </a>
+
+          {/* YouTube */}
           <a
             href="https://www.youtube.com/@pastorjuniorcesar903"
             target="_blank"
@@ -91,6 +104,20 @@ const Header = () => {
           >
             <Youtube size={17} />
           </a>
+
+          {/* TikTok */}
+          <a
+            href="https://www.tiktok.com/@pastor.jnior.csar?_r=1&_t=ZS-95M2MsAnstJ"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="TikTok"
+            title="TikTok"
+            className="hidden sm:inline-flex items-center justify-center w-9 h-9 rounded-lg bg-black text-white hover:opacity-90 hover:scale-105 transition-all"
+          >
+            <TikTokIcon size={17} />
+          </a>
+
+          {/* Fale Conosco */}
           <a
             href="https://wa.me/5544999780119"
             target="_blank"
@@ -99,6 +126,7 @@ const Header = () => {
           >
             Fale Conosco
           </a>
+
           <button onClick={() => setOpen(!open)} className="lg:hidden p-2 text-foreground">
             {open ? <X size={24} /> : <Menu size={24} />}
           </button>
@@ -160,6 +188,14 @@ const Header = () => {
                   className="flex items-center justify-center gap-2 bg-[#FF0000] text-white px-4 py-3 rounded-lg text-sm font-semibold"
                 >
                   <Youtube size={16} /> YouTube
+                </a>
+                <a
+                  href="https://www.tiktok.com/@pastor.jnior.csar?_r=1&_t=ZS-95M2MsAnstJ"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2 bg-black text-white px-4 py-3 rounded-lg text-sm font-semibold"
+                >
+                  <TikTokIcon size={16} /> TikTok
                 </a>
                 <a
                   href="https://wa.me/5544999780119"
