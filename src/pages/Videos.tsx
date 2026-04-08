@@ -5,7 +5,9 @@ import { useVideos } from "@/contexts/VideoContext";
 import { useState } from "react";
 
 const getYouTubeId = (url: string) => {
-  const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([^&?]+)/);
+  const match = url.match(
+    /(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([^&?/\s]+)/
+  );
   return match ? match[1] : null;
 };
 
