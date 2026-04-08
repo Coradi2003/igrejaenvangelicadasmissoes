@@ -26,6 +26,8 @@ const Footer = () => (
               { label: "Sobre", path: "/sobre" },
               { label: "Eventos", path: "/eventos" },
               { label: "Pregações", path: "/videos" },
+              { label: "Mentoria para Liderança", path: "/mentoria" },
+              { label: "Imersão Espiritual", path: "/imersao" },
               { label: "Doações", path: "/doacoes" },
             ].map((i) => (
               <Link key={i.path} to={i.path} className="text-sm text-muted-foreground hover:text-foreground transition-colors">

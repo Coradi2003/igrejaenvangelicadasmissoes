@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Heart, Calendar, Play, HandHeart, Users, ArrowRight, MapPin, ChevronDown } from "lucide-react";
+import { Heart, Calendar, Play, HandHeart, Users, ArrowRight, MapPin, ChevronDown, Flame, CheckCircle2 } from "lucide-react";
 import { useState } from "react";
 import SectionTitle from "@/components/SectionTitle";
 import { useVideos } from "@/contexts/VideoContext";
@@ -282,6 +282,73 @@ const Index = () => {
             <Link to="/agenda" className="inline-flex items-center gap-2 text-accent hover:underline font-semibold">
               Ver agenda completa <ArrowRight size={18} />
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Mentoria + Imersão */}
+      <section className="py-20 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_50%,_hsl(270_60%_50%/0.07),_transparent_70%)]" />
+        <div className="container relative z-10">
+          <SectionTitle title="Cresça em Fé e Liderança" subtitle="Programas especiais para quem quer ir além nos propósitos de Deus" gold />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            {/* Mentoria Card */}
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="glass rounded-2xl p-8 flex flex-col gap-5 hover:border-primary/50 transition-colors group"
+            >
+              <div className="w-14 h-14 rounded-2xl bg-gradient-purple flex items-center justify-center group-hover:scale-110 transition-transform">
+                <Users size={26} className="text-primary-foreground" />
+              </div>
+              <div>
+                <span className="text-xs text-primary font-semibold uppercase tracking-widest">Formação</span>
+                <h3 className="font-heading text-2xl font-bold mt-1 mb-3">Mentoria para Liderança</h3>
+                <p className="text-muted-foreground text-sm leading-relaxed">
+                  Programa de 6 meses com ensino bíblico aprofundado, mentoria personalizada com pastores seniores e formação prática no ministério.
+                </p>
+              </div>
+              <ul className="flex flex-col gap-2 text-sm text-muted-foreground">
+                {["Ensino bíblico sobre liderança servil", "Mentoria individual mensal", "Ativação no seu ministério", "Comissionamento ao final"].map((item) => (
+                  <li key={item} className="flex items-center gap-2">
+                    <CheckCircle2 size={14} className="text-primary shrink-0" /> {item}
+                  </li>
+                ))}
+              </ul>
+              <Link to="/mentoria" className="mt-auto inline-flex items-center gap-2 bg-gradient-purple text-primary-foreground px-6 py-3 rounded-xl font-semibold text-sm hover:opacity-90 hover:scale-105 transition-all shadow-[0_0_20px_hsl(270_60%_50%/0.3)]">
+                Saber mais e se inscrever <ArrowRight size={16} />
+              </Link>
+            </motion.div>
+
+            {/* Imersão Card */}
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="glass rounded-2xl p-8 flex flex-col gap-5 hover:border-accent/50 transition-colors group"
+            >
+              <div className="w-14 h-14 rounded-2xl bg-gradient-gold flex items-center justify-center group-hover:scale-110 transition-transform">
+                <Flame size={26} className="text-gold-foreground" />
+              </div>
+              <div>
+                <span className="text-xs text-accent font-semibold uppercase tracking-widest">Evento Especial</span>
+                <h3 className="font-heading text-2xl font-bold mt-1 mb-3">Imersão Espiritual</h3>
+                <p className="text-muted-foreground text-sm leading-relaxed">
+                  Três dias intensos de adoração, ensino e ativação espiritual para quem busca um encontro profundo com Deus e quer ser lançado para a sua missão.
+                </p>
+              </div>
+              <ul className="flex flex-col gap-2 text-sm text-muted-foreground">
+                {["3 dias de imersão total", "Adoração e momentos proféticos", "Ministério dos dons espirituais", "Vagas limitadas"].map((item) => (
+                  <li key={item} className="flex items-center gap-2">
+                    <CheckCircle2 size={14} className="text-accent shrink-0" /> {item}
+                  </li>
+                ))}
+              </ul>
+              <Link to="/imersao" className="mt-auto inline-flex items-center gap-2 bg-gradient-gold text-gold-foreground px-6 py-3 rounded-xl font-semibold text-sm hover:opacity-90 hover:scale-105 transition-all shadow-[0_0_20px_hsl(42_80%_55%/0.3)]">
+                Garantir minha vaga <ArrowRight size={16} />
+              </Link>
+            </motion.div>
           </div>
         </div>
       </section>

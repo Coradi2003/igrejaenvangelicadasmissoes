@@ -9,6 +9,8 @@ const navItems = [
   { label: "Sobre", path: "/sobre" },
   { label: "Eventos", path: "/eventos" },
   { label: "Pregações", path: "/videos" },
+  { label: "Mentoria", path: "/mentoria" },
+  { label: "Imersão", path: "/imersao" },
   { label: "Oração", path: "/oracao" },
   { label: "Doações", path: "/doacoes" },
   { label: "Projetos", path: "/projetos" },

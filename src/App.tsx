@@ -18,6 +18,8 @@ import Projects from "./pages/Projects";
 import Schedule from "./pages/Schedule";
 import Videos from "./pages/Videos";
 import Admin from "./pages/Admin";
+import Mentoria from "./pages/Mentoria";
+import Imersao from "./pages/Imersao";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -42,6 +44,8 @@ const App = () => (
                 <Route path="/agenda" element={<Schedule />} />
                 <Route path="/videos" element={<Videos />} />
                 <Route path="/admin" element={<Admin />} />
+                <Route path="/mentoria" element={<Mentoria />} />
+                <Route path="/imersao" element={<Imersao />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
               <Footer />
