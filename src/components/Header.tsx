@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Instagram, Facebook, Youtube } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import logo from "@/assets/logo.jpeg";
 
@@ -49,6 +49,49 @@ const Header = () => {
 
         <div className="flex items-center gap-3">
           <a
+            href="https://www.instagram.com/cesarpastorjunior"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Instagram"
+            title="Instagram"
+            className="hidden sm:inline-flex items-center justify-center w-9 h-9 rounded-lg bg-gradient-to-br from-[#833ab4] via-[#fd1d1d] to-[#fcb045] text-white hover:opacity-90 hover:scale-105 transition-all"
+          >
+            <Instagram size={17} />
+          </a>
+          <a
+            href="https://www.facebook.com/junior.cesar.432130"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Facebook – Pastor César"
+            title="Facebook – Pastor César"
+            className="hidden sm:inline-flex items-center justify-center w-9 h-9 rounded-lg bg-[#1877F2] text-white hover:opacity-90 hover:scale-105 transition-all"
+          >
+            <Facebook size={17} />
+          </a>
+          <a
+            href="https://www.facebook.com/people/pastor-J%C3%BAnior-c%C3%A9sar-projeto-%C3%81frica/61587150028683/?rdid=uUuo4L8dW9qYoCzD&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F1EX51ctf6w%2F"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Facebook – Projeto África"
+            title="Facebook – Projeto África"
+            className="hidden sm:inline-flex items-center justify-center w-9 h-9 rounded-lg bg-[#0a5c36] text-white hover:opacity-90 hover:scale-105 transition-all relative"
+          >
+            <Facebook size={17} />
+            <span className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-accent border border-background flex items-center justify-center text-[7px] font-black text-background leading-none">
+              🌍
+            </span>
+          </a>
+          <a
+            href="https://www.youtube.com/@pastorjuniorcesar903"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="YouTube"
+            title="YouTube"
+            className="hidden sm:inline-flex items-center justify-center w-9 h-9 rounded-lg bg-[#FF0000] text-white hover:opacity-90 hover:scale-105 transition-all"
+          >
+            <Youtube size={17} />
+          </a>
+          <a
             href="https://wa.me/5544999780119"
             target="_blank"
             rel="noopener noreferrer"
@@ -85,14 +128,48 @@ const Header = () => {
                   {item.label}
                 </Link>
               ))}
-              <a
-                href="https://wa.me/5544999780119"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-2 text-center bg-gradient-gold text-gold-foreground px-4 py-3 rounded-lg text-sm font-semibold"
-              >
-                Fale Conosco via WhatsApp
-              </a>
+              <div className="mt-2 flex flex-col gap-2">
+                <a
+                  href="https://www.instagram.com/cesarpastorjunior"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2 bg-gradient-to-br from-[#833ab4] via-[#fd1d1d] to-[#fcb045] text-white px-4 py-3 rounded-lg text-sm font-semibold"
+                >
+                  <Instagram size={16} /> @cesarpastorjunior
+                </a>
+                <a
+                  href="https://www.facebook.com/junior.cesar.432130"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2 bg-[#1877F2] text-white px-4 py-3 rounded-lg text-sm font-semibold"
+                >
+                  <Facebook size={16} /> Facebook – Pastor César
+                </a>
+                <a
+                  href="https://www.facebook.com/people/pastor-J%C3%BAnior-c%C3%A9sar-projeto-%C3%81frica/61587150028683/?rdid=uUuo4L8dW9qYoCzD&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F1EX51ctf6w%2F"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2 bg-[#0a5c36] text-white px-4 py-3 rounded-lg text-sm font-semibold"
+                >
+                  <Facebook size={16} /> 🌍 Projeto África
+                </a>
+                <a
+                  href="https://www.youtube.com/@pastorjuniorcesar903"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2 bg-[#FF0000] text-white px-4 py-3 rounded-lg text-sm font-semibold"
+                >
+                  <Youtube size={16} /> YouTube
+                </a>
+                <a
+                  href="https://wa.me/5544999780119"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-center bg-gradient-gold text-gold-foreground px-4 py-3 rounded-lg text-sm font-semibold"
+                >
+                  Fale Conosco via WhatsApp
+                </a>
+              </div>
             </nav>
           </motion.div>
         )}

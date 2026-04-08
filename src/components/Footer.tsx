@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Heart, MapPin, Phone, Mail } from "lucide-react";
+import { Heart, MapPin, Phone, Mail, Instagram } from "lucide-react";
 import logo from "@/assets/logo.jpeg";
 
 const Footer = () => (
@@ -43,6 +43,18 @@ const Footer = () => (
             <span className="flex items-center gap-2"><MapPin size={16} className="text-primary" /> Maringá, Paraná - Brasil</span>
             <span className="flex items-center gap-2"><Phone size={16} className="text-primary" /> (44) 99978-0119</span>
             <span className="flex items-center gap-2"><Mail size={16} className="text-primary" /> contato@iemuf.com.br</span>
+          </div>
+          {/* Social */}
+          <div className="mt-5 flex items-center gap-3">
+            <a
+              href="https://www.instagram.com/cesarpastorjunior"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram do Pastor César Junior"
+              className="flex items-center gap-2 bg-gradient-to-br from-[#833ab4] via-[#fd1d1d] to-[#fcb045] text-white px-3 py-2 rounded-lg text-xs font-semibold hover:opacity-90 hover:scale-105 transition-all"
+            >
+              <Instagram size={14} /> @cesarpastorjunior
+            </a>
           </div>
         </div>
 
