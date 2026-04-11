@@ -112,19 +112,58 @@ const Index = () => {
             transition={{ duration: 0.9, ease: "easeOut" }}
             className="flex flex-col items-center"
           >
-            {/* Logo */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.7, delay: 0.1 }}
-              className="mb-6"
-            >
-              <img
-                src={logo}
-                alt="Logo Igreja Missões Unidas Na Fé"
-                className="w-28 h-28 md:w-36 md:h-36 rounded-full object-cover ring-4 ring-accent/60 shadow-[0_0_60px_hsl(42_80%_55%/0.4)]"
-              />
-            </motion.div>
+            {/* Logos and Photos triad */}
+            <div className="relative mb-8 flex items-center justify-center pt-8">
+              {/* Mulher do Pastor (Logo1) */}
+              <motion.div
+                initial={{ opacity: 0, x: 40, scale: 0.7 }}
+                animate={{ opacity: 1, x: 0, scale: 1 }}
+                transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
+                className="absolute -translate-x-[75%] md:-translate-x-[90%] left-1/2 md:left-auto md:relative z-0"
+              >
+                <div className="relative group">
+                  <img
+                    src="/logo1.png"
+                    alt="Mulher do Pastor"
+                    className="w-20 h-20 md:w-32 md:h-32 rounded-full object-cover border-2 border-accent/30 shadow-2xl transition-all duration-500 group-hover:scale-105 group-hover:border-accent"
+                  />
+                  <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-accent/20 to-transparent pointer-events-none" />
+                </div>
+                <span className="hidden md:block text-[10px] text-accent/60 font-semibold uppercase tracking-tighter mt-2 text-center">Pastora</span>
+              </motion.div>
+
+              {/* Main Logo (Globe) */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.7, delay: 0.1 }}
+                className="relative z-10 mx-auto"
+              >
+                <img
+                  src={logo}
+                  alt="Logo Igreja Missões Unidas Na Fé"
+                  className="w-32 h-32 md:w-44 md:h-44 rounded-full object-cover ring-4 ring-accent/60 shadow-[0_0_80px_hsl(42_80%_55%/0.5)] bg-background transition-transform duration-700 hover:rotate-6"
+                />
+              </motion.div>
+
+              {/* Pastor (Logo2) */}
+              <motion.div
+                initial={{ opacity: 0, x: -40, scale: 0.7 }}
+                animate={{ opacity: 1, x: 0, scale: 1 }}
+                transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
+                className="absolute translate-x-[75%] md:translate-x-[90%] right-1/2 md:right-auto md:relative z-0"
+              >
+                <div className="relative group">
+                  <img
+                    src="/logo2.png"
+                    alt="Pastor"
+                    className="w-20 h-20 md:w-32 md:h-32 rounded-full object-cover border-2 border-accent/30 shadow-2xl transition-all duration-500 group-hover:scale-105 group-hover:border-accent"
+                  />
+                  <div className="absolute inset-0 rounded-full bg-gradient-to-tl from-accent/20 to-transparent pointer-events-none" />
+                </div>
+                <span className="hidden md:block text-[10px] text-accent/60 font-semibold uppercase tracking-tighter mt-2 text-center">Pastor</span>
+              </motion.div>
+            </div>
 
             {/* Badge */}
             <motion.div
