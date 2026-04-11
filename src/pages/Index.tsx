@@ -129,7 +129,6 @@ const Index = () => {
                   />
                   <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-accent/20 to-transparent pointer-events-none" />
                 </div>
-                <span className="hidden md:block text-[10px] text-accent/60 font-semibold uppercase tracking-tighter mt-2 text-center">Pastora</span>
               </motion.div>
 
               {/* Main Logo (Globe) */}
@@ -161,7 +160,6 @@ const Index = () => {
                   />
                   <div className="absolute inset-0 rounded-full bg-gradient-to-tl from-accent/20 to-transparent pointer-events-none" />
                 </div>
-                <span className="hidden md:block text-[10px] text-accent/60 font-semibold uppercase tracking-tighter mt-2 text-center">Pastor</span>
               </motion.div>
             </div>
 
