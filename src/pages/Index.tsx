@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Heart, Calendar, Play, HandHeart, Users, ArrowRight, MapPin, ChevronDown, Flame, CheckCircle2 } from "lucide-react";
+import { Heart, Calendar, Play, HandHeart, Users, ArrowRight, MapPin, ChevronDown, Flame, CheckCircle2, Search, Globe } from "lucide-react";
 import { useState } from "react";
 import SectionTitle from "@/components/SectionTitle";
 import { useVideos } from "@/contexts/VideoContext";
@@ -386,6 +386,107 @@ const Index = () => {
               </ul>
               <Link to="/imersao" className="mt-auto inline-flex items-center gap-2 bg-gradient-gold text-gold-foreground px-6 py-3 rounded-xl font-semibold text-sm hover:opacity-90 hover:scale-105 transition-all shadow-[0_0_20px_hsl(42_80%_55%/0.3)]">
                 Garantir minha vaga <ArrowRight size={16} />
+              </Link>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Encontre uma Igreja */}
+      <section className="py-24 bg-muted/20 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,hsl(42_80%_55%/0.05),transparent_40%)]" />
+        <div className="container relative z-10">
+          <SectionTitle 
+            title="Nossas Igrejas" 
+            subtitle="Encontre a Missões Unidas Na Fé mais próxima de você e venha nos visitar" 
+            gold 
+          />
+          
+          <div className="max-w-5xl mx-auto mt-12">
+            {/* Search */}
+            <div className="relative mb-16 max-w-2xl mx-auto">
+              <div className="relative group">
+                <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-accent transition-colors" size={22} />
+                <input 
+                  type="text" 
+                  placeholder="Busque por sua cidade (ex: Maringá, São Paulo...)"
+                  className="w-full bg-background/40 border border-white/5 rounded-2xl py-5 pl-14 pr-6 focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent/40 transition-all backdrop-blur-xl text-lg shadow-2xl"
+                />
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-accent/5 to-transparent -z-10 opacity-0 group-focus-within:opacity-100 transition-opacity" />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {/* Sede Mundial */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="glass p-8 rounded-3xl border-accent/20 bg-accent/5 relative overflow-hidden group hover:scale-[1.02] transition-all duration-500"
+              >
+                <div className="absolute -top-10 -right-10 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity duration-700">
+                  <Globe size={200} />
+                </div>
+                <div className="relative z-10">
+                  <div className="flex items-center gap-2 mb-6">
+                    <span className="bg-accent text-accent-foreground text-[10px] font-bold uppercase tracking-[0.2em] px-3 py-1 rounded-full shadow-lg shadow-accent/20">
+                      Sede Mundial
+                    </span>
+                  </div>
+                  <h3 className="text-2xl font-bold mb-3 tracking-tight">Maringá – PR</h3>
+                  <div className="flex gap-3 text-muted-foreground mb-8">
+                    <MapPin size={18} className="shrink-0 text-accent" />
+                    <p className="text-sm leading-relaxed">Rua Rio Itajaí, Conjunto Residencial Branca Vieira, 87043-170</p>
+                  </div>
+                  <a 
+                    href="https://www.google.com/maps/search/?api=1&query=Igreja+Evangélica+Missões+Unidas+Na+Fé+Maringá" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-between w-full group/btn"
+                  >
+                    <span className="text-sm font-bold text-accent">Como chegar</span>
+                    <div className="w-8 h-8 rounded-full bg-accent/10 flex items-center justify-center group-hover/btn:bg-accent group-hover/btn:text-accent-foreground transition-all">
+                      <ArrowRight size={16} />
+                    </div>
+                  </a>
+                </div>
+              </motion.div>
+
+              {/* Other Locations Placeholders */}
+              {[
+                { city: "Curitiba – PR", detail: "Unidades na Região Metropolitana", sub: "Próximo Culto: Dom 19h" },
+                { city: "São Paulo – SP", detail: "Representação em expansão", sub: "Em breve novas unidades" },
+              ].map((loc, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.1 * (i + 1) }}
+                  className="glass p-8 rounded-3xl group hover:border-accent/40 transition-all duration-500 hover:scale-[1.02]"
+                >
+                  <div className="w-14 h-14 rounded-2xl bg-muted/50 flex items-center justify-center mb-6 group-hover:bg-accent/10 transition-colors">
+                    <MapPin size={24} className="text-muted-foreground group-hover:text-accent transition-colors" />
+                  </div>
+                  <h3 className="text-xl font-bold mb-2">{loc.city}</h3>
+                  <p className="text-sm text-muted-foreground mb-4">{loc.detail}</p>
+                  <p className="text-[10px] font-semibold text-accent/60 uppercase tracking-widest">{loc.sub}</p>
+                </motion.div>
+              ))}
+            </div>
+
+            <motion.div 
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              className="mt-20 p-10 rounded-3xl border border-dashed border-white/10 text-center bg-white/[0.02]"
+            >
+              <h4 className="text-xl font-semibold mb-4 text-foreground/80">Não encontrou sua cidade?</h4>
+              <p className="text-muted-foreground mb-8 max-w-md mx-auto small text-sm leading-relaxed">
+                Estamos em constante expansão missionária. Se você deseja levar a Missões Unidas Na Fé para sua região, entre em contato conosco.
+              </p>
+              <Link to="/oracao" className="inline-flex items-center gap-3 bg-white/5 border border-white/10 px-8 py-3 rounded-xl font-semibold hover:bg-white/10 hover:scale-105 transition-all">
+                Falar com a Secretaria <ArrowRight size={18} />
               </Link>
             </motion.div>
           </div>
